@@ -65,16 +65,21 @@ function App() {
         });
     }
 
+    const removeItem = (csvFile: CsvFile) => {
+        setCsvFiles((prevState) => {
+            return [...prevState.filter(file => file.name !== csvFile.name)];
+        });
+    }
 
     const onSortHandler = () => {
 
         const newSortDirection = !sortDirection;
 
         setCsvFiles((prevState) => {
-            return prevState.sort((a, b) => {
+            return [...prevState.sort((a, b) => {
                 const compareResult = a.name.localeCompare(b.name)
                 return newSortDirection ? compareResult : compareResult * -1;
-            });
+            })];
         });
         setSortDirection(newSortDirection);
     }
@@ -88,19 +93,39 @@ function App() {
             <FileDropZone onDropEvent={onDropHandler}>
             </FileDropZone>
 
-            <div>
+            <table style={{border: '1px solid #ccc'}}>
+                <thead>
+                <tr>
+                    <td>
+                        File Name
+                    </td>
+                    <td colSpan={3}>
+                        <button onClick={onSortHandler}>Sort {sortDirection ? 'DESC' : 'ASC'}</button>
+                    </td>
+                </tr>
+                </thead>
+                <tbody>
                 {csvFiles.map((csvFile) => {
                     return (
-                        <div key={csvFile.name}>{csvFile.name}
-                            <button onClick={() => moveItemUp(csvFile)}>UP</button>
-                            <button onClick={() => moveItemDown(csvFile)}>DOWN</button>
-                        </div>
+                        <tr key={csvFile.name}>
+                            <td>{csvFile.name}</td>
+                            <td>
+                                <button onClick={() => moveItemUp(csvFile)}>UP</button>
+                            </td>
+                            <td>
+                                <button onClick={() => moveItemDown(csvFile)}>DOWN</button>
+                            </td>
+                            <td>
+                                <button onClick={() => removeItem(csvFile)}>DELETE</button>
+                            </td>
+                        </tr>
                     );
                 })}
-            </div>
+                </tbody>
+            </table>
 
             <button onClick={onMergeHandler}>Merge</button>
-            <button onClick={onSortHandler}>Sort {sortDirection ? 'DESC' : 'ASC'}</button>
+
         </>
     )
 }

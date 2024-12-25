@@ -7,7 +7,7 @@ const FileDropZone: React.FC<{ onDropEvent: (files: File[]) => void }> = (props)
     const {getRootProps, getInputProps, isDragActive} = useDropzone({onDrop: props.onDropEvent});
 
 
-    return (<div {...getRootProps()}>
+    return (<div className='dropzone' {...getRootProps()}>
         <input {...getInputProps()} />
         {
             isDragActive ?
